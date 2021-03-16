@@ -128,6 +128,7 @@ class Hyperopt(Backtesting):
             print('.', end='')
             sys.stdout.flush()
 
+    # Original implementaiton
     # def calculate_loss(self, total_profit: float, trade_count: int, trade_duration: float) -> float:
     #     """
     #     Objective function, returns smaller number for more optimal results
@@ -138,6 +139,7 @@ class Hyperopt(Backtesting):
     #     result = trade_loss + profit_loss + duration_loss
     #     return result
 
+    # MTG implementation, focusing on sharp ratio
     def calculate_loss(self, total_profit: list, trade_count: int) -> float:
         """
         Objective function, returns smaller number for more optimal results
@@ -145,18 +147,18 @@ class Hyperopt(Backtesting):
         period = self.max_date - self.min_date
         days_period = period.days
 
-        #adding slippage of 0.1% per trade
+        #adding slippage of 0.1% per trade, so its more realistic
         total_profit  = total_profit - 0.0005
-        expected_yearly_return = total_profit.sum()/days_period
+        expected_average_yearly_return = total_profit.sum()/days_period
 
         if (np.std(total_profit) != 0.):
-            sharp_ratio = expected_yearly_return/np.std(total_profit)*np.sqrt(365)
+            sharp_ratio = expected_average_yearly_return/np.std(total_profit)*np.sqrt(365)
         else:
-            sharp_ratio = 1.
+            sharp_ratio = 1 # Instead of 1, since no sharp ration means we can't optimise
+            # sharp_ratio = -20 # Instead of 1, since no sharp ration means we can't optimise
 
         sharp_ratio = -sharp_ratio
-        print(expected_yearly_return, np.std(total_profit),sharp_ratio)
-
+        print(expected_average_yearly_return, np.std(total_profit),sharp_ratio)
 
         result = sharp_ratio
         self.resultloss = result

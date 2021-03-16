@@ -1,0 +1,15 @@
+
+Plot something
+python ./scripts/plot_dataframe.py -s BBRSI -c config-binance.json -p LINK/BTC --indicators1 bb_lowerband,bb_upperband,bb_middleband --indicators2 rsi
+
+backtest
+python ./freqtrade/main.py -c config-binance.json -s BBRSI backtesting --refresh-pairs-cached --export trades --export-filename user_data/backtest_data/backtest-result.json
+python ./freqtrade/main.py -c config-binance.json -s BBRSI backtesting --export trades --export-filename user_data/backtest_data/backtest-result.json
+
+Sharp ratio- Basically it is the amount you make divided by the risk. 1 is not too good, 2 is what you want. 3 is apparently fairytale stuff.
+
+Optimise
+- setup what you're going to use in the optimise folder (a new .py)
+- Run the following command to start it:
+python ./freqtrade/main.py -c config-binance.json --customhyperopt BBRSIHyperOpts hyperopt -e 100
+- in between runs it is wise to delete the pickle files in user_data
